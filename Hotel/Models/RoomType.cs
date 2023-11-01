@@ -8,6 +8,8 @@ namespace Hotel.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public double BasePrice { get; set; }
+        public double AdditionalPrice { get; set; }
+
         public List<Bed>? Beds { get; set; }
         public List<Amenity>? Amenities { get; set; }
 
@@ -25,6 +27,14 @@ namespace Hotel.Models
                 count = count + bed.MaxPeople;
             }
             return count;
+        }
+
+        public double getPrice(int people)
+        {
+            double price = BasePrice + (AdditionalPrice * people);
+
+
+            return price;
         }
     }
 }

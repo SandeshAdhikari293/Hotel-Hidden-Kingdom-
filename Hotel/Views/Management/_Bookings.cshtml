@@ -29,10 +29,10 @@
                             <div class="flex items-center">
 
                                 <ul>
-                                    @foreach (Room room in booking.Rooms)
+                                    @foreach (BookedRoom room in booking.Rooms)
                                     {
                                         <li>
-                                            @room.Number @room.RoomType.Name
+                                            @room.Room.Number @room.Room.RoomType.Name
                                         </li>
                                     }
                                 </ul>
@@ -43,10 +43,10 @@
 
                     <td class="whitespace-no-wrap hidden py-4 text-sm font-normal text-gray-600 sm:px-3 lg:table-cell">
                         <ul>
-                            @foreach (Room room in booking.Rooms)
+                            @foreach(BookedRoom room in booking.Rooms)
                             {
                                 <li>
-                                    @room.Number @room.RoomType.Name
+                                    @room.Room.Number @room.Room.RoomType.Name
                                 </li>
                             }
                         </ul>

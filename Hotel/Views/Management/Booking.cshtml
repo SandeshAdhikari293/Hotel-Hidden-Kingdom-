@@ -24,7 +24,7 @@
                     <div class="flex flex-col justify-start items-start dark:bg-gray-800 bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p class="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">Room selection</p>
                         
-                        @foreach(Room room in Model.Rooms)
+                        @foreach(BookedRoom room in Model.Rooms)
                         {
                             <div class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
                                 <div class="pb-4 md:pb-8 w-full md:w-40">
@@ -33,16 +33,17 @@
                                 </div>
                                 <div class="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
                                     <div class="w-full flex flex-col justify-start items-start space-y-8">
-                                        <h3 class="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">@room.Number @room.RoomType.Name</h3>
+                                        <h3 class="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">@room.Room.Number @room.Room.RoomType.Name</h3>
                                         <div class="flex justify-start items-start flex-col space-y-2">
-                                            <p class="text-sm dark:text-white leading-none text-gray-800"><span class="dark:text-gray-400 text-orange-300">Breakfast: </span> Included</p>
+                                            <p class="text-sm dark:text-white leading-none text-gray-800"><span class="dark:text-gray-400 text-orange-300">Breakfast Included: </span> @room.BreakfastIncluded</p>
+                                            <p class="text-sm dark:text-white leading-none text-gray-800"><span class="dark:text-gray-400 text-orange-300">Occupants: </span> @room.Occupants</p>
 
                                         </div>
                                     </div>
                                     <div class="flex justify-between space-x-8 items-start w-full">
                                         <p class="text-base dark:text-white xl:text-lg leading-6"></p>
                                         <p class="text-base dark:text-white xl:text-lg leading-6 text-gray-800"></p>
-                                        <p class="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">$@room.RoomType.BasePrice</p>
+                                        <p class="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">$@room.Room.RoomType.BasePrice</p>
                                     </div>
                                 </div>
                             </div>

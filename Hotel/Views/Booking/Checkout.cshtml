@@ -53,15 +53,15 @@
                 @{
                     double checkoutPrice = 0;
                 }
-                @foreach(Room room in Model.SelectedRooms)
+                @foreach(BookedRoom room in Model.SelectedRooms)
                 {
                     <div class="flex flex-col rounded-lg bg-white sm:flex-row">
                         <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/img/room2.jpg" alt="" />
                         <div class="flex w-full flex-col px-4 py-4">
-                            <span class="font-semibold">@room.Number @room.RoomType.Name</span>
-                            <span class="float-right text-gray-400">$@room.RoomType.BasePrice/night x 5 nights</span>
+                            <span class="font-semibold">@room.Room.Number @room.Room.RoomType.Name</span>
+                            <span class="float-right text-gray-400">$@room.Room.RoomType.BasePrice/night x 5 nights</span>
                             @{
-                                double finalPrice = room.RoomType.BasePrice * 5;
+                                double finalPrice = room.Room.RoomType.BasePrice * 5;
                             }
                             <p class="text-lg font-bold">$@finalPrice</p>
                             @{

@@ -90,11 +90,11 @@
 
     }
 
-    function addRoom(roomID) {
+    function addRoom(roomID, people) {
         $.ajax({
             url: '@Url.Action("AddRoom", "Booking")',
             type: 'POST',
-            data: { roomID: roomID },
+            data: { roomID: roomID, people: people },
             success: function (data) {
                 $('#roomselection').html(data);
                 refreshInformation();

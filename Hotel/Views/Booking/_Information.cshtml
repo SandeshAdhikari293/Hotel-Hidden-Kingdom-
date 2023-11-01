@@ -27,20 +27,20 @@
             @{
                 int count = 1;
             }
-            @foreach (Room room in Model.BookingCart.SelectedRooms)
+            @foreach (BookedRoom room in Model.BookingCart.SelectedRooms)
             {
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         @count
                     </th>
                     <td class="px-6 py-4">
-                        @room.Number - @room.RoomType.Name
+                        @room.Room.Number - @room.Room.RoomType.Name
                     </td>
                     <td class="px-6 py-4">
-                        @room.RoomType.BasePrice
+                        @room.Room.RoomType.BasePrice
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <button onclick="removeRoom('@room.Id.ToString()')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remove</button>
+                        <button onclick="removeRoom('@room.Room.Id.ToString()')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remove</button>
                     </td>
                 </tr>
 
@@ -51,11 +51,11 @@
                 int bedCount = 0;
                 int maxPeople = 0;
                 double price = 0;
-                @foreach (Room rm in Model.BookingCart.SelectedRooms)
+                @foreach (BookedRoom rm in Model.BookingCart.SelectedRooms)
                 {
-                    bedCount = bedCount + rm.RoomType.Beds.Count;
-                    maxPeople = maxPeople + rm.RoomType.maxPeople();
-                    price = price + rm.RoomType.BasePrice;
+                    bedCount = bedCount + rm.Room.RoomType.Beds.Count;
+                    maxPeople = maxPeople + rm.Room.RoomType.maxPeople();
+                    price = price + rm.Room.RoomType.BasePrice;
                 }
 
             }

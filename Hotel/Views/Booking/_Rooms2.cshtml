@@ -4,10 +4,12 @@
 @{
 }
 @model BookingRooms;
+@{
+}
 
 @foreach (KeyValuePair<RoomType, List<Room>> entry in Model.RoomList)
 {
-    <form asp-action="AddRoomToBooking" onsubmit="addRoom('@entry.Value.ElementAt(0).Id')">
+    <form asp-action="AddRoomToBooking">
   <div class="container mx-auto px-4 mb-4">
     <div class="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
       <div class="lg:col-span-3 lg:row-end-1">
@@ -40,45 +42,45 @@
         <div class="mt-5 flex items-center">
           <p class="ml-2 text-sm font-medium text-gray-500">@entry.Key.Description</p>
         </div>
+              <input type="hidden" name="roomnumber" value="@entry.Value.ElementAt(0).Id" class="peer sr-only" />
 
                 <h2 class="mt-8 text-base text-gray-900">Breakfast options</h2>
                 <div class="mt-3 flex select-none flex-wrap items-center gap-1">
 
                     <label class="cursor-pointer">
-                        <input checked="checked" type="radio" name="type" value="no" class="peer sr-only" />
+                        <input checked="checked" type="radio" name="breakfast" value="false" class="peer sr-only" />
                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">No breakfast</p>
                     </label>
                     <label class="cursor-pointer">
-                        <input type="radio" name="type" value="Yes" class="peer sr-only" />
+                            <input type="radio" name="breakfast" value="true" class="peer sr-only" />
                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Breakfast included</p>
                     </label>
                 </div>
 
-        <h2 class="mt-8 text-base text-gray-900">Room option</h2>
+        <h2 class="mt-8 text-base text-gray-900">Occupant options</h2>
         <div class="mt-3 flex select-none flex-wrap items-center gap-1">
-            @{
-                bool first = true;
-            }
-            @foreach(Room room in entry.Value)
-            {
-                @if (first)
-                {
-                            <label class="cursor-pointer">
-                                <input checked="checked" type="radio" name="roomnumber" value="@room.Id.ToString()" class="peer sr-only" />
-                                <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Room @room.Number</p>
-                                <span class="mt-1 block text-center text-xs">-</span>
-                            </label>
-                }
-                else
-                {
-                            <label class="cursor-pointer">
-                                <input type="radio" name="roomnumber" value="@room.Id.ToString()" class="peer sr-only" />
-                                <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Room @room.Number</p>
-                                <span class="mt-1 block text-center text-xs">-</span>
-                            </label>
-                }
 
-              first = false;
+            @for(int i = 1; i <= entry.Key.maxPeople(); i++)
+            {
+                            if (Model.BookingCart.People - Model.BookingCart.getOccupants() >= i)
+                            {
+                                @if (i == 1)
+                                {
+                                    <label class="cursor-pointer">
+                                        <input id="ppl" checked="checked" type="radio" name="people" value="@i" class="peer sr-only" />
+                                        <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i Person</p>
+                                        <span class="mt-1 block text-center text-xs">-</span>
+                                    </label>
+                                }
+                                else
+                                {
+                                    <label class="cursor-pointer">
+                                        <input id="ppl" type="radio" name="people" value="@i" class="peer sr-only" />
+                                        <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i People</p>
+                                        <span class="mt-1 block text-center text-xs">-</span>
+                                    </label>
+                                }
+                            }
             }
         </div>
 
@@ -114,7 +116,14 @@
       </div>
     </div>
   </div>
-    </form>
+  <script>
+      $('form').submit(function (e) {
+          var people = document.getElementById('ppl').value;
+          addRoom('@entry.Value.ElementAt(0).Id', people);
+      });
+
+  </script>
+</form>
 
 <div class="h-1 rounded overflow-hidden">
     <div class="w-full h-full bg-gray-300"></div>

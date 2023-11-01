@@ -26,7 +26,7 @@
                 @{
                     int count = 1;
                 }
-                @foreach (Room room in Model.BookingCart.SelectedRooms)
+                @foreach (BookedRoom room in Model.BookingCart.SelectedRooms)
                 {
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="absolute left-0 ml-5 lg:hidden">#</span>
@@ -34,24 +34,24 @@
                     </td>
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Room</span>
-                        @room.RoomType.Name
+                        @room.Room.RoomType.Name
                     </td>
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Beds</span>
-                        @room.RoomType.Beds.Count
+                        @room.Room.RoomType.Beds.Count
                     </td>
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">People</span>
-                        @room.RoomType.maxPeople()
+                        @room.Room.RoomType.maxPeople()
                     </td>
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Price</span>
-                        @room.RoomType.BasePrice
+                        @room.Room.RoomType.BasePrice
                     </td>
 
                     <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
                         <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Remove</span>
-                        <button onclick="removeRoom('@room.Id.ToString()')" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Remove</button>
+                        <button onclick="removeRoom('@room.Room.Id.ToString()')" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Remove</button>
                     </td>
                 }
             </tr>

@@ -114,13 +114,17 @@ namespace Hotel.Controllers
         {
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
             booking.BookingDate = DateTime.Now;
-            booking.Personal.Address.Country = "UK";
             if (ModelState.IsValid)
             {
-                foreach(Room room in bookingCart.SelectedRooms)
+                foreach(BookedRoom room in bookingCart.SelectedRooms)
                 {
-                    Room roomToAdd = _context.Rooms.Find(room.Id);
-                    booking.Rooms.Add(roomToAdd);
+                    Room roomToAdd = _context.Rooms.Find(room.Room.Id);
+                    BookedRoom bookedRoom = new BookedRoom();
+                    bookedRoom.Room = roomToAdd;
+
+                    bookedRoom.Occupants = room.Occupants;
+                    bookedRoom.BreakfastIncluded = room.BreakfastIncluded;
+                    booking.Rooms.Add(bookedRoom);
                 }
 
                 booking.Id = Guid.NewGuid();
@@ -138,10 +142,15 @@ namespace Hotel.Controllers
 
             if (ModelState.IsValid)
             {
-                foreach (Room room in bookingCart.SelectedRooms)
+                foreach (BookedRoom room in bookingCart.SelectedRooms)
                 {
                     Room roomToAdd = _context.Rooms.Find(room.Id);
-                    booking.Rooms.Add(roomToAdd);
+                    BookedRoom bookedRoom = new BookedRoom();
+                    bookedRoom.Room = roomToAdd;
+
+                    bookedRoom.Occupants = room.Occupants;
+                    bookedRoom.BreakfastIncluded = room.BreakfastIncluded;
+                    booking.Rooms.Add(bookedRoom);
                 }
 
                 booking.Id = Guid.NewGuid();
@@ -155,12 +164,16 @@ namespace Hotel.Controllers
 
         public bool isAvailable(Room room, DateTime checkin, DateTime checkout)
         {
-            foreach (Booking booking in _context.Bookings.Include(r => r.Rooms).ToList())
+            foreach (Booking booking in _context.Bookings.Include(r => r.Rooms).Where(cin => 
+            cin.CheckIn <= DateTime.Today.Date && cin.CheckOut >= DateTime.Today.Date).ToList())
             {
-                if (booking.Rooms.Contains(room))
+                foreach(BookedRoom bookedRoom in booking.Rooms)
                 {
-                    bool overlap = booking.CheckIn < checkout && checkin < booking.CheckOut;
-                    if (overlap) return false;
+                    if(bookedRoom.Room.Id == room.Id)
+                    {
+                        bool overlap = booking.CheckIn < checkout && checkin < booking.CheckOut;
+                        if (overlap) return false;
+                    }
                 }
             }
 
@@ -232,12 +245,12 @@ namespace Hotel.Controllers
             return RoomList;
         }
 
-        public bool contains(List<Room> rooms, Room room)
+        public bool contains(List<BookedRoom> rooms, Room room)
         {
             if(rooms == null) return false;
-            foreach(Room r in rooms)
+            foreach(BookedRoom r in rooms)
             {
-                if (r.Id.ToString().Equals(room.Id.ToString()))
+                if (r.Room.Id.ToString().Equals(room.Id.ToString()))
                 {
                     return true;
                 }
@@ -245,12 +258,12 @@ namespace Hotel.Controllers
             return false;
         }
 
-        public Room getRoom(List<Room> rooms, Room room)
+        public BookedRoom getBookedRoom(List<BookedRoom> rooms, Room room)
         {
             if (rooms == null) return null;
-            foreach (Room r in rooms)
+            foreach (BookedRoom r in rooms)
             {
-                if (r.Id.ToString().Equals(room.Id.ToString()))
+                if (r.Room.Id.ToString().Equals(room.Id.ToString()))
                 {
                     return r;
                 }
@@ -275,9 +288,11 @@ namespace Hotel.Controllers
         
 
         [HttpPost]
-        public ActionResult AddRoom(string roomID)
+        public ActionResult AddRoom(string roomID, int people)
         {
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
+            if(bookingCart == null) return RedirectToAction("Index");
+
             Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
                 
                 //Find(Guid.Parse(roomID));
@@ -290,7 +305,10 @@ namespace Hotel.Controllers
 
             if(!contains(bookingCart.SelectedRooms, roomToAdd))
             {
-                bookingCart.SelectedRooms.Add(roomToAdd);
+                BookedRoom bookedRoom = new BookedRoom();
+                bookedRoom.Room = roomToAdd;
+                bookedRoom.Occupants = people;
+                bookingCart.SelectedRooms.Add(bookedRoom);
             }
 
             HttpContext.Session.Remove("bookingcart");
@@ -303,13 +321,15 @@ namespace Hotel.Controllers
         public ActionResult RemoveRoom(string roomID)
         {
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
+            if (bookingCart == null) return RedirectToAction("Index");
+
             Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
 
             //Find(Guid.Parse(roomID));
 
             if (contains(bookingCart.SelectedRooms, roomToAdd))
             {
-                bookingCart.SelectedRooms.Remove(getRoom(bookingCart.SelectedRooms, roomToAdd));
+                bookingCart.SelectedRooms.Remove(getBookedRoom(bookingCart.SelectedRooms, roomToAdd));
             }
 
             HttpContext.Session.Remove("bookingcart");
@@ -319,9 +339,11 @@ namespace Hotel.Controllers
         }
 
 
-        public IActionResult AddRoomToBooking(string roomnumber)
+        public IActionResult AddRoomToBooking(string roomnumber, int people, bool breakfast)
         {
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
+            if (bookingCart == null) return RedirectToAction("Index");
+
             Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomnumber)).FirstOrDefault();
 
             //Find(Guid.Parse(roomID));
@@ -334,11 +356,24 @@ namespace Hotel.Controllers
 
             if (!contains(bookingCart.SelectedRooms, roomToAdd))
             {
-                bookingCart.SelectedRooms.Add(roomToAdd);
+                BookedRoom bookedRoom = new BookedRoom();
+                bookedRoom.Room = roomToAdd;
+                bookedRoom.Occupants = people;
+                bookedRoom.BreakfastIncluded = breakfast;
+                bookingCart.SelectedRooms.Add(bookedRoom);
             }
 
             HttpContext.Session.Remove("bookingcart");
             HttpContext.Session.SetObjectAsJson("bookingcart", bookingCart);
+
+            BookingCart bookingCart1 = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
+
+            int ppl = 0;
+            foreach(BookedRoom booked in bookingCart1.SelectedRooms)
+            {
+                ppl = ppl + booked.Occupants;
+            }
+            Debug.WriteLine(ppl);
 
             return UpdateBooking();
         }
@@ -347,6 +382,7 @@ namespace Hotel.Controllers
         {
 
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
+            if (bookingCart == null) return RedirectToAction("Index");
 
             BookingRooms bookingRooms = new BookingRooms();
 

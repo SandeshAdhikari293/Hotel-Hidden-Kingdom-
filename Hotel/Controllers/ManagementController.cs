@@ -17,7 +17,7 @@ namespace Hotel.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            return View(_context.Bookings.Include(r => r.Rooms).ThenInclude(rt => rt.RoomType).ToList());
+            return View(_context.Bookings.Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).ToList());
         }
 
         [Authorize(Roles = "Admin")]
@@ -30,7 +30,7 @@ namespace Hotel.Controllers
         public IActionResult Booking(Guid id)
         {
             return View(_context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType).Where(i => i.Id == id).FirstOrDefault());
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(i => i.Id == id).FirstOrDefault());
         }
 
         [Authorize(Roles = "Admin")]
@@ -92,7 +92,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckIn <= today && cin.CheckOut >= today).ToList();
             return bookings;
         }
@@ -103,7 +103,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckIn > today).ToList();
             return bookings;
         }
@@ -114,7 +114,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckOut < today).ToList();
 
             return bookings;
@@ -126,7 +126,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckIn < today && cin.CheckOut > today).ToList();
             return bookings;
         }
@@ -137,7 +137,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .ToList();
             return bookings;
         }
@@ -148,7 +148,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckIn == today).ToList();
             return bookings;
         }
@@ -159,7 +159,7 @@ namespace Hotel.Controllers
             //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.RoomType)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckOut == today).ToList();
             return bookings;
         }

@@ -19,6 +19,8 @@ namespace Hotel.Data
         public DbSet<Personal> Personals { get; set; } = default!;
         public DbSet<Address> Addresses { get; set; } = default!;
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<BookedRoom> BookedRooms { get; set; }
+
     }
 
 }
