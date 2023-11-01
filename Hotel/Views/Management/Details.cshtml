@@ -1,0 +1,139 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+@model IEnumerable<Booking> 
+
+<div class="p-4 sm:ml-64">
+    <div class="pt-8 mb-2">
+        <p class="text-xl font-medium">Management Dashboard</p>
+        <p class="text-gray-400">Welcome @User.Identity.Name</p>
+    </div>
+
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+
+        <div class="mt-4 w-full">
+            <div class="flex w-full flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
+                <form class="relative flex w-full max-w-2xl items-center">
+                    <svg class="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" class=""></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" class=""></line>
+                    </svg>
+                    <input type="name" name="search" id="search" class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none focus:border-b-2" placeholder="Search by Order ID, Customer" />
+                </form>
+
+                <button type="button" class="relative mr-auto inline-flex cursor-pointer items-center rounded-full border border-gray-200 bg-white px-5 py-2 text-center text-sm font-medium text-gray-800 hover:bg-gray-100 focus:shadow sm:mr-0">
+                    <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                    <svg class="mr-2 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filter
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button onclick="displayTable('previous', @((int)BookingFilter.PREV))" class="inline-block p-4 border-b-2 rounded-t-lg" id="previous-tab" data-tabs-target="#previous" type="button" role="tab" aria-controls="previous" aria-selected="false">Previous</button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button onclick="displayTable('current', @((int)BookingFilter.CUR))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="current-tab" data-tabs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">Current</button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button onclick ="displayTable('checkin', @((int)BookingFilter.CIN))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#checkin" type="button" role="tab" aria-controls="checkin" aria-selected="false">Check-ins</button>
+                </li>
+                <li role="presentation">
+                    <button onclick="displayTable('checkout', @((int)BookingFilter.OUT))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#checkout" type="button" role="tab" aria-controls="checkout" aria-selected="false">Check-outs</button>
+                </li>
+                <li role="presentation">
+                    <button onclick="displayTable('staying', @((int)BookingFilter.STA))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#staying" type="button" role="tab" aria-controls="staying" aria-selected="false">Staying</button>
+                </li>
+                <li role="presentation">
+                    <button onclick="displayTable('upcoming', @((int)BookingFilter.UPC))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Upcoming</button>
+                </li>
+                <li role="presentation">
+                    <button onclick="displayTable('all', @((int)BookingFilter.ALL))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All</button>
+                </li>
+            </ul>
+        </div>
+        <div id="default-tab-content">
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="previous" role="tabpanel" aria-labelledby="previous-tab">
+
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="current" role="tabpanel" aria-labelledby="current-tab">
+
+                
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="checkin" role="tabpanel" aria-labelledby="checkin-tab">
+
+
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="checkout" role="tabpanel" aria-labelledby="checkout-tab">
+
+
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="staying" role="tabpanel" aria-labelledby="staying-tab">
+
+
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="all" role="tabpanel" aria-labelledby="all-tab">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+    <script>
+        var currentState = 0;
+
+        function displayTable(section, state) {
+            $.ajax({
+                url: '@Url.Action("BookingDetailsPartial", "Management")',
+                type: 'POST',
+                data: { state: state, search: $('#search').val() },
+                success: function (data) {
+                    currentState = state;
+                    $('#'+section).html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            displayTable('current', @((int)BookingFilter.CUR))
+        });
+
+        function search() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table"+currentState);
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 1
+                ; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        $('input[name="search"]').keyup(function () {
+            search();
+        });
+    </script>

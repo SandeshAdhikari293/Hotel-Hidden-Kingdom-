@@ -1,0 +1,98 @@
+﻿@model BookingRooms;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div>
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    #
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Room
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Price
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (Room room in Model.BookingCart.SelectedRooms)
+            {
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        @count
+                    </th>
+                    <td class="px-6 py-4">
+                        @room.Number - @room.RoomType.Name
+                    </td>
+                    <td class="px-6 py-4">
+                        @room.RoomType.BasePrice
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="removeRoom('@room.Id.ToString()')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remove</button>
+                    </td>
+                </tr>
+
+                count++;
+
+            }
+            @{
+                int bedCount = 0;
+                int maxPeople = 0;
+                double price = 0;
+                @foreach (Room rm in Model.BookingCart.SelectedRooms)
+                {
+                    bedCount = bedCount + rm.RoomType.Beds.Count;
+                    maxPeople = maxPeople + rm.RoomType.maxPeople();
+                    price = price + rm.RoomType.BasePrice;
+                }
+
+            }
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Total
+                </th>
+                <td class="px-6 py-4">
+                    -
+                </td>
+                <td class="px-6 py-4">
+                    @price
+                </td>
+                <td class="px-6 py-4 text-right">
+                    @if(Model.BookingCart.SelectedRooms.Count == Model.BookingCart.RoomCount)
+                    {
+                        <a asp-action="BookingConfirmation" type="button" class="relative inline-block text-lg group">
+                            <span class="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                                <span class="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
+                                <span class="absolute left-0 w-48 h-48 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                                <span class="relative">Reserve</span>
+                            </span>
+                            <span class="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0" data-rounded="rounded-lg"></span>
+                        </a>
+                    }else{
+                        <a type="button" disabled class="cursor-not-allowed relative inline-block text-lg group">
+                            <span class="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                                <span class="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
+                                <span class="absolute left-0 w-48 h-48 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                                <span class="relative">. . .</span>
+                            </span>
+                            <span class="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0" data-rounded="rounded-lg"></span>
+                        </a>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

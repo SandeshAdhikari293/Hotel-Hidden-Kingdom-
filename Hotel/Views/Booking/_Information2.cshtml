@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model BookingRooms;
+
+<div class="ml-4 flex items-center sm:ml-0 sm:justify-center">
+    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+        <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="hidden border lg:table-cell">#</th>
+                <th scope="col" class="hidden border lg:table-cell">Room</th>
+                <th scope="col" class="hidden border lg:table-cell">Beds</th>
+                <th scope="col" class="hidden border lg:table-cell">People</th>
+                <th scope="col" class="hidden border lg:table-cell">Price</th>
+                <th scope="col" class="hidden border lg:table-cell">
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <tr class="lg:flex-no-wrap mb-10 flex flex-row flex-wrap bg-white lg:mb-0 lg:table-row lg:flex-row lg:hover:bg-gray-100">
+                @{
+                    int count = 1;
+                }
+                @foreach (Room room in Model.BookingCart.SelectedRooms)
+                {
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="absolute left-0 ml-5 lg:hidden">#</span>
+                        @count
+                    </td>
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Room</span>
+                        @room.RoomType.Name
+                    </td>
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Beds</span>
+                        @room.RoomType.Beds.Count
+                    </td>
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">People</span>
+                        @room.RoomType.maxPeople()
+                    </td>
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Price</span>
+                        @room.RoomType.BasePrice
+                    </td>
+
+                    <td class="relative block w-full border border-b p-3 text-center text-gray-800 lg:static lg:table-cell lg:w-auto">
+                        <span class="lg:hidden absolute left-0  px-2 py-1 text-xs font-bold uppercase">Remove</span>
+                        <button onclick="removeRoom('@room.Id.ToString()')" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Remove</button>
+                    </td>
+                }
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,252 @@
+﻿@model BookingCart
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form asp-action="PlaceBooking">
+    <input asp-for="Booking.CheckIn" value="@Model.CheckIn" type="hidden" />
+    <input asp-for="Booking.CheckOut" value="@Model.CheckOut" type="hidden" />
+    <input asp-for="Booking.People" value="@Model.People" type="hidden" />
+    <input asp-for="Booking.RoomCount" value="@Model.RoomCount" type="hidden" />
+    <div class="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32 mt-5">
+        <a href="#" class="text-2xl font-bold text-gray-800">Enter your personal information</a>
+        <div class="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
+            <div class="relative">
+                <ul class="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
+                    <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                        <a class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-200 text-xs font-semibold text-emerald-700" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </a>
+                        <span class="font-semibold text-gray-900">Dates</span>
+                    </li>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                        <a class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-200 text-xs font-semibold text-emerald-700" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </a>
+                        <span class="font-semibold text-gray-900">Rooms</span>
+                    </li>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                        <a class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-600 text-xs font-semibold text-white ring ring-gray-600 ring-offset-2" href="#">2</a>
+                        <span class="font-semibold text-gray-900">Payment</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
+        <div class="px-4 pt-8">
+            <p class="text-xl font-medium">Reservation Summary</p>
+            <p class="text-gray-400">Please ensure you have selected the correct rooms.</p>
+            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+                @{
+                    double checkoutPrice = 0;
+                }
+                @foreach(Room room in Model.SelectedRooms)
+                {
+                    <div class="flex flex-col rounded-lg bg-white sm:flex-row">
+                        <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/img/room2.jpg" alt="" />
+                        <div class="flex w-full flex-col px-4 py-4">
+                            <span class="font-semibold">@room.Number @room.RoomType.Name</span>
+                            <span class="float-right text-gray-400">$@room.RoomType.BasePrice/night x 5 nights</span>
+                            @{
+                                double finalPrice = room.RoomType.BasePrice * 5;
+                            }
+                            <p class="text-lg font-bold">$@finalPrice</p>
+                            @{
+                                checkoutPrice = checkoutPrice + finalPrice;
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <p class="mt-8 text-lg font-medium">Optional</p>
+             <div class="max-w-2xl mx-auto">
+
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Additional information</label>
+                    <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="If you have any additional requests or requirements, please let us know!"></textarea>
+             </div>
+        </div>
+        <div class="mt-10 bg-gray-100 px-4 pt-8 lg:mt-0">
+            <p class="text-xl font-medium">Payment Details</p>
+            <p class="text-gray-400">Complete your order by providing your payment details.</p>
+            <div class="">
+                <label for="fullname" class="mt-4 mb-2 block text-sm font-medium">Full name</label>
+                <div class="relative">
+                    <input asp-for="Booking.Personal.Name" required type="text" id="fullname" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="John Smith" />
+                    <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3" /><circle cx="12" cy="10" r="3" /><circle cx="12" cy="12" r="10" /></svg>
+                    </div>
+                </div>
+
+                <label for="contact" class="mt-4 mb-2 block text-sm font-medium">Contact information</label>
+                <div class="flex flex-col sm:flex-row mb-2">
+                    <div class="relative flex-shrink-0 w-1/2">
+                        <input asp-for="Booking.Personal.Email" required type="email" id="email" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Email address" />
+                        <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="relative flex-shrink-0 w-1/2">
+                        <input asp-for="Booking.Personal.Phone" required type="text" id="phone" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Phone number" />
+                        <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+
+                <label for="personal-address" class="mt-4 mb-2 block text-sm font-medium">Personal Address</label>
+                <div class="flex flex-col sm:flex-row mb-2">
+                    <div class="relative flex-shrink-0 sm:w-7/12">
+                        <input asp-for="Booking.Personal.Address.Street" required type="text" id="personaladdress" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Street Address" />
+                        <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </div>
+
+                    </div>
+                    <div class="">
+                        <input asp-for ="Booking.Personal.Address.City" required type="text" id="personalcity" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="City" />
+                        <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                        </div>
+                    </div>
+
+                    <input asp-for="Booking.Personal.Address.PostalCode" required type="text" class="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="ZIP" />
+                </div>
+                <div class="">
+                    <select required asp-for="Booking.Personal.Address.Country" id="countries" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500">
+                        <option value="UK">United Kingdom</option>
+                        <option value="ID">India</option>
+                        <option value="NP">Nepal</option>
+                        <option value="CH">China</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="mt-2 flex items-center">
+                        <input id="payment-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="payment-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Book without payment</label>
+                    </div>
+                }
+                <div class="mt-2 flex items-center">
+                    <input checked id="address-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="address-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Billing address is the same</label>
+                </div>
+
+                <div id="payment">
+                    <label for="card-holder" class="mt-4 mb-2 block text-sm font-medium">Card Holder</label>
+                    <div class="relative">
+                        <input required type="text" id="card-holder" name="cardHolder" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Cardholder name" />
+                        <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <label for="card-no" class="mt-4 mb-2 block text-sm font-medium">Card Details</label>
+                    <div class="flex">
+                        <div class="relative w-7/12 flex-shrink-0">
+                            <input required type="text" id="card-no" name="card-no" class="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="xxxx-xxxx-xxxx-xxxx" />
+                            <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                                <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
+                                    <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <input id="expiry" required type="text" name="credit-expiry" class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="MM/YY" />
+                        <input id="cvc" required type="text" name="credit-cvc" class="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="CVC" />
+                    </div>
+
+                    <div id="billingaddress" class="hidden">
+                        <label for="billing-address" class="mt-4 mb-2 block text-sm font-medium">Billing Address</label>
+                        <div class="flex flex-col sm:flex-row mb-2">
+                            <div class="relative flex-shrink-0 sm:w-7/12">
+                                <input type="text" id="billing-address" name="billing-address" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Street Address" />
+                                <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+
+                                </div>
+                            </div>
+                            <div class="">
+                                <input type="text" id="billing-address" name="billing-address" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="City" />
+                                <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                                </div>
+                            </div>
+
+                            <input type="text" name="billing-zip" class="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="ZIP" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-2">
+                    <input required id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="link-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline">terms and conditions</a>.</label>
+                </div>
+
+
+                <!-- Total -->
+                <div class="mt-6 border-t border-b py-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-900">Subtotal</p>
+                        <p class="font-semibold text-gray-900">$@checkoutPrice</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-900">+vat</p>
+                        <p class="font-semibold text-gray-900">$0.00</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-900">Total</p>
+                    <p class="text-2xl font-semibold text-gray-900">$@checkoutPrice</p>
+                </div>
+            </div>
+            <button type="submit" class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">Place Order</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $("#address-checkbox").change(function () {
+        if (!this.checked) {
+            $("#billingaddress").show();
+        } else {
+            $("#billingaddress").hide();
+        }
+    });
+
+    $("#payment-checkbox").change(function () {
+        if (!this.checked) {
+            $("#payment").show();
+            $('#expiry').removeAttr('disabled');
+            $('#card-no').removeAttr('disabled');
+            $('#card-holder').removeAttr('disabled');
+            $('#cvc').removeAttr('disabled');
+        } else {
+            $("#payment").hide();
+            $('#expiry').attr('disabled', 'disabled');
+            $('#card-no').attr('disabled', 'disabled');
+            $('#card-holder').attr('disabled', 'disabled');
+            $('#cvc').attr('disabled', 'disabled');
+        }
+    });
+</script>

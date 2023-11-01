@@ -1,0 +1,40 @@
+﻿@model BookingRooms;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var mod = Model;
+    var m = Model;
+}
+@foreach (KeyValuePair<RoomType, List<Room>> entry in Model.RoomList)
+{
+    <div class="w-full mx-auto flex max-w-xs flex-col items-center rounded-xl border px-4 text-center md:max-w-lg md:flex-row md:items-start md:text-left">
+        <div class="mb-4 md:mr-6 md:mb-0">
+            <img class="h-56 rounded-lg object-cover md:w-56" src="~/img/room2.jpg" alt="" />
+        </div>
+        <div class="">
+            <p class="text-xl font-medium text-gray-700">@entry.Key.Name</p>
+            <p class="mb-4 text-sm font-medium text-gray-500">@entry.Key.Description</p>
+            <div class="flex space-x-2">
+                <div class="flex flex-col items-center rounded-xl bg-gray-100 px-4 py-2">
+                    <p class="text-sm font-medium text-gray-500">Bed</p>
+                    <p class="text-3xl font-medium text-gray-600">@entry.Key.Beds.Count</p>
+                </div>
+                <div class="flex flex-col items-center rounded-xl bg-gray-100 px-4 py-2">
+                    <p class="text-sm font-medium text-gray-500">People</p>
+                    <p class="text-3xl font-medium text-gray-600">@entry.Key.maxPeople()</p>
+                </div>
+                <div class="flex flex-col items-center rounded-xl bg-gray-100 px-4 py-2">
+                    <p class="text-sm font-medium text-gray-500">Floor</p>
+                    <p class="text-3xl font-medium text-gray-600">5th</p>
+                </div>
+                <div class=""></div>
+            </div>
+            <div class="mb-3"></div>
+            <div class="flex justify-between space-x-2">
+                <p class="text-xl font-medium text-gray-700">$@entry.Key.BasePrice</p>
+                <button onclick="addRoom('@entry.Value.ElementAt(0).Id')" class="rounded-lg border-2 border-transparent bg-blue-600 px-4 py-2 font-medium text-white">Book</button>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,187 @@
+﻿@model BookingRooms;
+@using System.Text.Json;
+
+@{
+
+    ViewData["Title"] = "Select your room";
+
+
+}
+
+<div class="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32 mt-5">
+    <a href="#" class="text-2xl font-bold text-gray-800">Select your rooms</a>
+    <div class="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
+        <div class="relative">
+            <ul class="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
+                <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                    <a class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-200 text-xs font-semibold text-emerald-700" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </a>
+                    <span class="font-semibold text-gray-900">Dates</span>
+                </li>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                    <a class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-600 text-xs font-semibold text-white ring ring-gray-600 ring-offset-2" href="#">2</a>
+                    <span class="font-semibold text-gray-900">Rooms</span>
+                </li>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <li class="flex items-center space-x-3 text-left sm:space-x-4">
+                    <a class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-400 text-xs font-semibold text-white" href="#">3</a>
+                    <span class="font-semibold text-gray-500">Payment</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-row justify-center">
+    <div id="roomselection" class="flex flex-col float-left"></div>
+</div>
+
+<div id="tooltip-notenough" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+    <p id="tooltipContent">You have not selected all rooms</p>
+    <div class="tooltip-arrow" data-popper-arrow></div>
+</div>
+<!--    <input id="confirmRooms" type="submit" onclick="onSubmit()" value="Confirm selection" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" disabled="disabled">
+-->
+
+<!-- drawer init and toggle -->
+
+<!-- drawer component -->
+<div id="drawer-swipe" class="fixed z-40 w-full overflow-y-auto bg-white border-t border-gray-200 rounded-t-lg dark:border-gray-700 dark:bg-gray-800 transition-transform bottom-0 left-0 right-0 translate-y-full bottom-[60px]" tabindex="-1" aria-labelledby="drawer-swipe-label">
+    <div class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" data-drawer-toggle="drawer-swipe">
+        <span class="absolute w-8 h-1 -translate-x-1/2 bg-gray-300 rounded-lg top-3 left-1/2 dark:bg-gray-600"></span>
+        <h5 id="drawer-swipe-label" class="inline-flex items-center text-base text-gray-500 dark:text-gray-400 font-medium">
+            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10ZM17 13h-2v-2a1 1 0 0 0-2 0v2h-2a1 1 0 0 0 0 2h2v2a1 1 0 0 0 2 0v-2h2a1 1 0 0 0 0-2Z" />
+            </svg>Your reservation
+        </h5>
+    </div>
+
+    <div id="information" class="flex flex-col"></div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
+<script>
+
+    var ids = [];
+    var count = 0;
+    const $targetEl = document.getElementById('drawer-swipe');
+    const options = {
+        placement: 'bottom',
+        edge: true,
+        backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-30'
+    };
+
+    const drawer = new Drawer($targetEl, options);
+
+    function openDraw() {
+        drawer.show();
+    }
+    
+    function closeDraw() {
+
+    }
+
+    function addRoom(roomID) {
+        $.ajax({
+            url: '@Url.Action("AddRoom", "Booking")',
+            type: 'POST',
+            data: { roomID: roomID },
+            success: function (data) {
+                $('#roomselection').html(data);
+                refreshInformation();
+                count++;
+
+                if (count == 1) {
+                    drawer.show();
+                }
+
+                if (count => @Model.BookingCart.RoomCount) {
+                    drawer.show();
+                    document.getElementById('confirmRooms').disabled = false;
+                    document.getElementById("confirmRooms").classList.remove("cursor-not-allowed");
+                    document.getElementById('tooltipContent').innerHTML = "You have your rooms";
+
+                }
+            },
+            error: function (x, e) {
+                if (x.status == 550) {
+                    alert("You can't add anymore rooms");
+                    drawer.show();
+                }
+            }
+        });
+    }
+
+    function removeRoom(roomID) {
+        $.ajax({
+            url: '@Url.Action("RemoveRoom", "Booking")',
+            type: 'POST',
+            data: { roomID: roomID },
+            success: function (data) {
+                $('#roomselection').html(data);
+                refreshInformation();
+                count--;
+
+                if (count == 0) {
+                    drawer.hide();
+                }
+                if (count < @Model.BookingCart.RoomCount) {
+                    document.getElementById('confirmRooms').disabled = true;
+                    document.getElementById("confirmRooms").classList.add("cursor-not-allowed");
+                    document.getElementById('tooltipContent').innerHTML = "Select all rooms";
+
+                }
+            }
+        });
+    }
+
+    function refreshInformation() {
+        $.ajax({
+            url: '@Url.Action("RefreshInfo", "Booking")',
+            type: 'POST',
+            success: function (data) {
+                $('#information').html(data);
+            }
+        });
+    }
+
+    function addID(id) {
+        if (ids.length < @Model.BookingCart.RoomCount) {
+
+            ids[ids.length] = id;
+            updateUserFeedback();
+
+            if (ids.length == @Model.BookingCart.RoomCount) {
+                document.getElementById('confirmRooms').disabled = false;
+                document.getElementById("confirmRooms").classList.remove("cursor-not-allowed");
+                document.getElementById('tooltipContent').innerHTML = "You have your rooms";
+            }
+        } else {
+            alert("You have already selected the correct amount of rooms");
+        }
+    }
+
+    function updateUserFeedback() {
+        document.getElementById("roomcount").innerHTML = ids.length + " / " + @Model.BookingCart.RoomCount+" selected.. "
+    }
+
+    function onSubmit() {
+    }
+
+
+    $(document).ready(function () {
+        $('#roomselection').load('@Url.Action("RoomsPartial")');
+        drawer.hide();
+
+        refreshInformation();
+    });
+</script>

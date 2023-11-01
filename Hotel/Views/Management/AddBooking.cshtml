@@ -1,0 +1,122 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model BookingCart
+
+<script src=@Html.Raw("https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.umd.min.js")></script>
+
+<div class="p-4 sm:ml-64">
+    <div class="pt-8 mb-2">
+        <p class="text-xl font-medium">Manually add a booking</p>
+        <p class="text-gray-400">Welcome @User.Identity.Name</p>
+    </div>
+
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        <label class="float-end relative inline-flex items-center cursor-pointer">
+            <input id="lock" type="checkbox" value="" class="sr-only peer">
+            <div class="group peer ring-0 bg-rose-400  rounded-full outline-none duration-300 after:duration-300 w-24 h-12  shadow-md peer-checked:bg-emerald-500  peer-focus:outline-none  after:content-[''] after:rounded-full after:absolute after:bg-gray-50 after:outline-none after:h-10 after:w-10 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-12 peer-hover:after:scale-95">
+                <svg class="absolute  top-1 left-12 stroke-gray-900 w-10 h-10" height="100" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" width="100" x="0" xmlns="http://www.w3.org/2000/svg" y="0">
+                    <path class="svg-fill-primary" d="M50,18A19.9,19.9,0,0,0,30,38v8a8,8,0,0,0-8,8V74a8,8,0,0,0,8,8H70a8,8,0,0,0,8-8V54a8,8,0,0,0-8-8H38V38a12,12,0,0,1,23.6-3,4,4,0,1,0,7.8-2A20.1,20.1,0,0,0,50,18Z">
+                    </path>
+                </svg>
+                <svg class="absolute top-1 left-1 stroke-gray-900  w-10 h-10" height="100" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" width="100" x="0" xmlns="http://www.w3.org/2000/svg" y="0">
+                    <path d="M30,46V38a20,20,0,0,1,40,0v8a8,8,0,0,1,8,8V74a8,8,0,0,1-8,8H30a8,8,0,0,1-8-8V54A8,8,0,0,1,30,46Zm32-8v8H38V38a12,12,0,0,1,24,0Z" fill-rule="evenodd">
+                    </path>
+                </svg>
+            </div>
+        </label>
+        <div class="container mx-auto bg-opacity-100 rounded-full p-2">
+
+            <form asp-controller="Booking" asp-action="SearchBooking" autocomplete="off">
+                <div class="flex justify-around gap-6 mb-6 ml-10 mr-10 sm:flex-cols-5">
+                    <div class="w-1/4">
+                        <label for="in" class="block mb-2 text-sm font-medium text-white dark:text-white">Check-in</label>
+                        <input id="in" value="" name="checkIn" type="text" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500" placeholder="Select date start" datepicker-format="dd/mm/yyyy" required />
+                    </div>
+                    <div class="w-1/4">
+                        <label for="out" class="block mb-2 text-sm font-medium text-white dark:text-white">Check-out</label>
+                        <input id="out" name="checkOut" type="text" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500" placeholder="Select date end" datepicker-format="dd/mm/yyyy" required />
+                    </div>
+                    <div class="w-1/5">
+                        <label for="ppl" class="block mb-2 text-sm font-medium text-white dark:text-white">People</label>
+                        <input asp-for="Booking.People" type="number" id="ppl" min="1" max="20" value="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    </div>
+                    <div class="w-1/5">
+                        <label for="rooms" class="block mb-2 text-sm font-medium text-white dark:text-white">Rooms</label>
+                        <input asp-for="Booking.RoomCount" type="number" id="rooms" min="1" max="5" value="1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    </div>
+                    <div class="flex mt-6 items-center">
+                        <button type="submit" class="text-white bg-hhkred hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            Book
+                            <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    var date = new Date();
+    var tomorrowsDate = date.setDate(date.getDate() + 1);
+
+    const DateTime = easepick.DateTime;
+    const bookedDates = [].map(d => {
+        if (d instanceof Array) {
+            const start = new DateTime(d[0], 'YYYY-MM-DD');
+            const end = new DateTime(d[1], 'YYYY-MM-DD');
+
+            return [start, end];
+        }
+
+        return new DateTime(d, 'YYYY-MM-DD');
+    });
+    const picker = new easepick.create({
+        element: document.getElementById('in'),
+        format: "DD-MM-YYYY",
+        css: [
+            '@Html.Raw("https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css")',
+            'https://easepick.com/css/demo_hotelcal.css',
+        ],
+        plugins: ['RangePlugin', 'LockPlugin'],
+        RangePlugin: {
+            elementEnd: document.getElementById('out'),
+            delimitter: "/",
+            startDate: new Date(),
+            minDate: new Date(),
+            endDate: tomorrowsDate,
+            tooltipNumber(num) {
+                return num - 1;
+            },
+            locale: {
+                one: 'night',
+                other: 'nights',
+            },
+        },
+        LockPlugin: {
+            minDays: 2,
+            inseparable: true,
+            filter(date, picked) {
+                if (picked.length === 1) {
+                    const incl = date.isBefore(picked[0]) ? '[)' : '(]';
+                    return !picked[0].isSame(date, 'day') && date.inArray(bookedDates, incl);
+                }
+
+                return date.inArray(bookedDates, '[)');
+            },
+        }
+    });
+
+    $("#lock").change(function () {
+        if (!this.checked) {
+        } else {
+
+        }
+    });
+</script>
