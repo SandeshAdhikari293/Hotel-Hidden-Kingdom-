@@ -29,14 +29,47 @@ namespace Hotel.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Booking(Guid id)
         {
-            return View(_context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
-                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(i => i.Id == id).FirstOrDefault());
+            return View(GetBooking(id));
         }
 
         [Authorize(Roles = "Admin")]
         public IActionResult AddBooking()
         {
             return View();
+        }
+
+        public Booking GetBooking(Guid id)
+        {
+            return _context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(i => i.Id == id).FirstOrDefault();
+        }
+
+        public IActionResult CancelBooking(Guid id)
+        {
+            Booking booking = GetBooking(id);
+            booking.Cancelled = true;
+
+            _context.Update(booking);
+            _context.SaveChanges();
+
+            return View("Booking", GetBooking(id));
+        }
+
+        public IActionResult UncancelBooking(Guid id)
+        {
+            Booking booking = GetBooking(id);
+            booking.Cancelled = false;
+
+            _context.Update(booking);
+            _context.SaveChanges();
+
+            return View("Booking", GetBooking(id));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult ManageBooking(Guid id)
+        {
+            return View(GetBooking(id));
         }
 
         [Authorize(Roles = "Admin")]
@@ -78,7 +111,12 @@ namespace Hotel.Controllers
                 bookings = UpcomingBookings();
 
             }
-            
+            else if (state == (int)BookingFilter.CAN)
+            {
+                bookings = CancelledBookings();
+
+            }
+
             FilterBooking filterBooking = new FilterBooking();
             filterBooking.bookings = bookings;
             filterBooking.state = state;
@@ -138,6 +176,17 @@ namespace Hotel.Controllers
             List<Booking> bookings = _context.Bookings
                 .Include(p => p.Personal).ThenInclude(a => a.Address)
                 .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
+                .ToList();
+            return bookings;
+        }
+
+        public List<Booking> CancelledBookings()
+        {
+            DateTime today = DateTime.Now.Date;
+            //Returns a list of the current bookings - i.e. where the customer is staying at the hotel
+            List<Booking> bookings = _context.Bookings
+                .Include(p => p.Personal).ThenInclude(a => a.Address)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(c => c.Cancelled == true)
                 .ToList();
             return bookings;
         }

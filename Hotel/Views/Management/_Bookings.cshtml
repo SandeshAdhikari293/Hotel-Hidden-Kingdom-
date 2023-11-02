@@ -53,7 +53,10 @@
                     </td>
 
                     <td class="whitespace-no-wrap hidden py-4 text-sm font-normal text-gray-500 sm:px-3 lg:table-cell">
-                        @if (booking.CheckIn == DateTime.Today)
+                        @if(booking.Cancelled == true){
+                            <span class="ml-2 mr-3 whitespace-nowrap rounded-full bg-red-100 px-2 py-0.5 text-red-800">CANCELLED</span>
+                        }
+                        else if (booking.CheckIn == DateTime.Today)
                         {
                             <span class="ml-2 mr-3 whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-green-800">Check in</span>
                         }
@@ -79,7 +82,12 @@
                     </td>
 
                     <td class="whitespace-no-wrap py-4 text-right text-sm text-gray-600 sm:px-3 lg:text-left">
-                        @if (booking.CheckIn == DateTime.Today)
+                        @if (booking.Cancelled == true)
+                        {
+                            <span class="mt-1 ml-auto block w-fit whitespace-nowrap rounded-full bg-red-100 px-2 py-0.5 text-center text-xs text-red-800 lg:hidden">CANCELLED</span>
+
+                        }
+                        else if (booking.CheckIn == DateTime.Today)
                         {
                             <span class="mt-1 ml-auto block w-fit whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-center text-xs text-green-800 lg:hidden">Check in</span>
                         }

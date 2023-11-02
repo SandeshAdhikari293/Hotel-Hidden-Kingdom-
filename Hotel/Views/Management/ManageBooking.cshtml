@@ -3,28 +3,23 @@
 *@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-
-
 }
 @model Booking
-
-
 <div class="p-4 sm:ml-64">
     <div class="pt-8">
         <p class="text-xl font-medium">Booking #@Model.Id</p>
-        <p class="text-gray-400">@Model.CheckIn.ToLongDateString() to @Model.CheckOut.ToLongDateString() </p>
+        <p class="text-gray-400">@Model.CheckIn.ToLongDateString() to @Model.CheckOut.ToLongDateString() <a asp-action="" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a> </p>
     </div>
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
 
-        <!-- component -->
         <div class="">
             <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
             <div class="flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
                 <div class="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
                     <div class="flex flex-col justify-start items-start dark:bg-gray-800 bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p class="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">Room selection</p>
-                        
-                        @foreach(BookedRoom room in Model.Rooms)
+
+                        @foreach (BookedRoom room in Model.Rooms)
                         {
                             <div class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
                                 <div class="pb-4 md:pb-8 w-full md:w-40">
@@ -43,7 +38,7 @@
                                     <div class="flex justify-between space-x-8 items-start w-full">
                                         <p class="text-base dark:text-white xl:text-lg leading-6"></p>
                                         <p class="text-base dark:text-white xl:text-lg leading-6 text-gray-800"></p>
-                                        <p class="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">$@room.Room.RoomType.BasePrice</p>
+                                        <a asp-action="" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +52,7 @@
                             <div class="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                                 <div class="flex justify-between w-full">
                                     <p class="text-base dark:text-white leading-4 text-gray-800">Subtotal</p>
-                                    <p class="text-base dark:text-gray-300 leading-4 text-gray-600">$@Model.getRoomSubtotal()</p>
+                                    <p class="text-base dark:text-gray-300 leading-4 text-gray-600">$@Model.calculatePrice()</p>
                                 </div>
                                 <div class="flex justify-between items-center w-full">
                                     <p class="text-base dark:text-white leading-4 text-gray-800">Discount <span class="bg-gray-200 p-1 text-xs font-medium dark:bg-white dark:text-gray-800 leading-3 text-gray-800">N/A</span></p>
@@ -65,12 +60,12 @@
                                 </div>
                                 <div class="flex justify-between items-center w-full">
                                     <p class="text-base dark:text-white leading-4 text-gray-800">Breakfast</p>
-                                    <p class="text-base dark:text-gray-300 leading-4 text-gray-600">$@(Model.getBreakfastSubtotal())</p>
+                                    <p class="text-base dark:text-gray-300 leading-4 text-gray-600">$@(5 * Model.getLengthOfStay())</p>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center w-full">
                                 <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
-                                <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">$@(Model.getTotal())</p>
+                                <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">$@((5 * Model.getLengthOfStay()) + Model.calculatePrice())</p>
                             </div>
                         </div>
                         <div class="flex flex-col justify-center px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 dark:bg-gray-800 space-y-6">
@@ -81,7 +76,7 @@
                             </div>
 
                             <div class="w-full flex justify-center items-center">
-                                <button class="hover:bg-red-600 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-red-800 text-base font-medium leading-4 text-white">Check Customer Out</button>
+                                <button class="hover:bg-red-600 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-red-800 text-base font-medium leading-4 text-white">CANCEL BOOKING</button>
                             </div>
                         </div>
                     </div>
@@ -125,29 +120,7 @@
                                 </div>
                             </div>
                             <div class="mt-2 flex w-full justify-center items-center md:justify-start md:items-start">
-                                <button data-popover-target="popover-no-arrow" data-popover-trigger="click" type="button" class="text-center mt-6 md:mt-0 dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base font-medium leading-4 text-gray-800">Manage booking</button>
-                                <div data-popover id="popover-no-arrow" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                        <h3 class="font-semibold text-gray-900 dark:text-white">Manage this booking</h3>
-                                    </div>
-                                    <div class="px-3 py-2">
-                                        <div class="w-full flex justify-center items-center">
-                                            @if (Model.Cancelled)
-                                            {
-                                                <div class="w-full flex justify-center items-center">
-                                                    <a asp-action="UncancelBooking" asp-route-id="@Model.Id" class="hover:bg-green-600 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-green-800 text-base font-medium leading-4 text-white">RE-ACTIVATE BOOKING</a>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="w-full flex justify-center items-center">
-                                                    <a asp-action="CancelBooking" asp-route-id="@Model.Id" class="hover:bg-red-600 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-red-800 text-base font-medium leading-4 text-white">CANCEL BOOKING</a>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                
+                                <a asp-action="Booking" asp-route-id="@Model.Id" class="text-center mt-6 md:mt-0 dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base font-medium leading-4 text-gray-800">Return</a>
                             </div>
                         </div>
                     </div>
@@ -155,8 +128,6 @@
             </div>
         </div>
 
-
     </div>
 </div>
-
 

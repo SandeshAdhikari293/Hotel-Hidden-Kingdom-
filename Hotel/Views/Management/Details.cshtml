@@ -1,11 +1,30 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model IEnumerable<Booking>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
+    List<Booking> todaysCheckins = new List<Booking>();
+    List<Booking> todaysCheckouts = new List<Booking>();
+    List<Booking> occupied = new List<Booking>();
+
+    foreach (Booking booking in Model)
+    {
+        if (booking.CheckIn.Date == DateTime.Now.Date)
+        {
+            todaysCheckins.Add(booking);
+        }
+        if (booking.CheckOut.Date == DateTime.Now.Date)
+        {
+            todaysCheckouts.Add(booking);
+        }
+        if (booking.CheckIn.Date < DateTime.Now.Date && booking.CheckOut > DateTime.Now.Date)
+        {
+            occupied.Add(booking);
+        }
+    }
 }
-@model IEnumerable<Booking> 
 
 <div class="p-4 sm:ml-64">
     <div class="pt-8 mb-2">
@@ -38,25 +57,41 @@
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
                 <li class="mr-2" role="presentation">
-                    <button onclick="displayTable('previous', @((int)BookingFilter.PREV))" class="inline-block p-4 border-b-2 rounded-t-lg" id="previous-tab" data-tabs-target="#previous" type="button" role="tab" aria-controls="previous" aria-selected="false">Previous</button>
+                    <button onclick="displayTable('previous', @((int)BookingFilter.PREV))" class="inline-block p-4 border-b-2 rounded-t-lg" id="previous-tab" data-tabs-target="#previous" type="button" role="tab" aria-controls="previous" aria-selected="false">Previous
+                    </button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button onclick="displayTable('current', @((int)BookingFilter.CUR))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="current-tab" data-tabs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">Current</button>
+                    <button onclick="displayTable('current', @((int)BookingFilter.CUR))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="current-tab" data-tabs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">Current
+                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(occupied.Count + todaysCheckins.Count + todaysCheckouts.Count)</span>
+
+                    </button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button onclick ="displayTable('checkin', @((int)BookingFilter.CIN))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#checkin" type="button" role="tab" aria-controls="checkin" aria-selected="false">Check-ins</button>
+                    <button onclick ="displayTable('checkin', @((int)BookingFilter.CIN))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#checkin" type="button" role="tab" aria-controls="checkin" aria-selected="false">Check-ins
+                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(todaysCheckins.Count)</span>
+
+                    </button>
                 </li>
                 <li role="presentation">
-                    <button onclick="displayTable('checkout', @((int)BookingFilter.OUT))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#checkout" type="button" role="tab" aria-controls="checkout" aria-selected="false">Check-outs</button>
+                    <button onclick="displayTable('checkout', @((int)BookingFilter.OUT))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#checkout" type="button" role="tab" aria-controls="checkout" aria-selected="false">Check-outs
+                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(todaysCheckouts.Count)</span>
+
+                    </button>
                 </li>
                 <li role="presentation">
-                    <button onclick="displayTable('staying', @((int)BookingFilter.STA))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#staying" type="button" role="tab" aria-controls="staying" aria-selected="false">Staying</button>
+                    <button onclick="displayTable('staying', @((int)BookingFilter.STA))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#staying" type="button" role="tab" aria-controls="staying" aria-selected="false">Staying
+                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(occupied.Count)</span>
+
+                    </button>
                 </li>
                 <li role="presentation">
-                    <button onclick="displayTable('upcoming', @((int)BookingFilter.UPC))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Upcoming</button>
+                    <button onclick="displayTable('upcoming', @((int)BookingFilter.UPC))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="upcoming-tab" data-tabs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Upcoming</button>
                 </li>
                 <li role="presentation">
-                    <button onclick="displayTable('all', @((int)BookingFilter.ALL))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All</button>
+                    <button onclick="displayTable('all', @((int)BookingFilter.ALL))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="all-tab" data-tabs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All</button>
+                </li>
+                <li role="presentation">
+                    <button onclick="displayTable('cancel', @((int)BookingFilter.CAN))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="cancel-tab" data-tabs-target="#cancel" type="button" role="tab" aria-controls="all" aria-selected="false">Cancelled</button>
                 </li>
             </ul>
         </div>
@@ -84,6 +119,8 @@
 
             </div>
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="all" role="tabpanel" aria-labelledby="all-tab">
+            </div>
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="cancel" role="tabpanel" aria-labelledby="cancel-tab">
             </div>
         </div>
 

@@ -52,20 +52,27 @@
             <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
                 @{
                     double checkoutPrice = 0;
+                    double breakfastPrice = 0;
+                    double roomsPrice = 0;
                 }
                 @foreach(BookedRoom room in Model.SelectedRooms)
                 {
                     <div class="flex flex-col rounded-lg bg-white sm:flex-row">
                         <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/img/room2.jpg" alt="" />
                         <div class="flex w-full flex-col px-4 py-4">
-                            <span class="font-semibold">@room.Room.Number @room.Room.RoomType.Name</span>
-                            <span class="float-right text-gray-400">$@room.Room.RoomType.BasePrice/night x 5 nights</span>
+                            <span class="font-semibold">@room.Room.Number @room.Room.RoomType.Name (@room.Occupants)</span>
+                            <span class="float-right text-gray-400">$@room.getRoomsSubtotalPerNight()/night x @room.Booking.getLengthOfStay() + (@room.Occupants x) breakfast at $@room.getBreakfastSubtotal()</span>
                             @{
-                                double finalPrice = room.Room.RoomType.BasePrice * 5;
+                                double finalPrice = room.getTotal();
+                                double breakfastSubtotal = room.getBreakfastSubtotal();
+                                double roomsSubtotal = room.getRoomSubtotal();
                             }
                             <p class="text-lg font-bold">$@finalPrice</p>
                             @{
                                 checkoutPrice = checkoutPrice + finalPrice;
+                                breakfastPrice = breakfastPrice + breakfastSubtotal;
+                                roomsPrice = roomsPrice + roomsSubtotal;
+
                             }
                         </div>
                     </div>
@@ -86,6 +93,7 @@
             <div class="">
                 <label for="fullname" class="mt-4 mb-2 block text-sm font-medium">Full name</label>
                 <div class="relative">
+                    <input asp-for="Booking.Price" type="hidden" value="@checkoutPrice"/>
                     <input asp-for="Booking.Personal.Name" required type="text" id="fullname" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="John Smith" />
                     <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3" /><circle cx="12" cy="10" r="3" /><circle cx="12" cy="12" r="10" /></svg>
@@ -208,11 +216,11 @@
                 <div class="mt-6 border-t border-b py-2">
                     <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                        <p class="font-semibold text-gray-900">$@checkoutPrice</p>
+                        <p class="font-semibold text-gray-900">$@roomsPrice</p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-900">+vat</p>
-                        <p class="font-semibold text-gray-900">$0.00</p>
+                        <p class="text-sm font-medium text-gray-900">Breakfast</p>
+                        <p class="font-semibold text-gray-900">$@breakfastPrice</p>
                     </div>
                 </div>
                 <div class="mt-6 flex items-center justify-between">

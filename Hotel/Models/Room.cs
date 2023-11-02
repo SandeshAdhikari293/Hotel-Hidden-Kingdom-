@@ -9,7 +9,7 @@ namespace Hotel.Models
         public string Number { get; set; }
 
         [JsonIgnore]
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
         public RoomType? RoomType { get; set;}
     }
 }

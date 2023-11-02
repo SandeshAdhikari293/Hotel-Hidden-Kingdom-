@@ -37,5 +37,30 @@
 
             return price;
         }
+
+        public double getRoomSubtotal()
+        {
+            double subtotal = 0;
+            foreach(BookedRoom bookedRoom in Rooms)
+            {
+                subtotal = subtotal + bookedRoom.getRoomSubtotal();
+            }
+            return subtotal;
+        }
+
+        public double getTotal()
+        {
+            return getRoomSubtotal() + getBreakfastSubtotal();
+        }
+
+        public double getBreakfastSubtotal()
+        {
+            double subtotal = 0;
+            foreach (BookedRoom bookedRoom in Rooms)
+            {
+                subtotal = subtotal + bookedRoom.getBreakfastSubtotal();
+            }
+            return subtotal;
+        }
     }
 }

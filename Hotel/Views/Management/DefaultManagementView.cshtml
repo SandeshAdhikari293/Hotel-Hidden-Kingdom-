@@ -1,0 +1,19 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model Booking
+<div class="p-4 sm:ml-64">
+    <div class="pt-8">
+        <p class="text-xl font-medium">Booking #@Model.Id</p>
+        <p class="text-gray-400">@Model.CheckIn.ToLongDateString() to @Model.CheckOut.ToLongDateString() </p>
+    </div>
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+
+        <!-- CONTENT -->
+
+    </div>
+</div>
+

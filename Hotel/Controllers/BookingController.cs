@@ -43,9 +43,13 @@ namespace Hotel.Controllers
             DateTime checkoutDate = DateTime.ParseExact(checkOut, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             BookingCart bookingCart = new BookingCart();
 
+            booking.CheckIn = checkinDate;
+            booking.CheckOut = checkoutDate;
+
             if (ModelState.IsValid)
             {
                 bookingCart.Id = Guid.NewGuid();
+                bookingCart.Booking = booking;
                 bookingCart.CheckIn = checkinDate;
                 bookingCart.CheckOut = checkoutDate;
                 bookingCart.People = booking.People;
@@ -119,12 +123,9 @@ namespace Hotel.Controllers
                 foreach(BookedRoom room in bookingCart.SelectedRooms)
                 {
                     Room roomToAdd = _context.Rooms.Find(room.Room.Id);
-                    BookedRoom bookedRoom = new BookedRoom();
-                    bookedRoom.Room = roomToAdd;
+                    room.Room = roomToAdd;
 
-                    bookedRoom.Occupants = room.Occupants;
-                    bookedRoom.BreakfastIncluded = room.BreakfastIncluded;
-                    booking.Rooms.Add(bookedRoom);
+                    booking.Rooms.Add(room);
                 }
 
                 booking.Id = Guid.NewGuid();
@@ -145,12 +146,9 @@ namespace Hotel.Controllers
                 foreach (BookedRoom room in bookingCart.SelectedRooms)
                 {
                     Room roomToAdd = _context.Rooms.Find(room.Id);
-                    BookedRoom bookedRoom = new BookedRoom();
-                    bookedRoom.Room = roomToAdd;
+                    room.Room = roomToAdd;
 
-                    bookedRoom.Occupants = room.Occupants;
-                    bookedRoom.BreakfastIncluded = room.BreakfastIncluded;
-                    booking.Rooms.Add(bookedRoom);
+                    booking.Rooms.Add(room);
                 }
 
                 booking.Id = Guid.NewGuid();
@@ -172,7 +170,13 @@ namespace Hotel.Controllers
                     if(bookedRoom.Room.Id == room.Id)
                     {
                         bool overlap = booking.CheckIn < checkout && checkin < booking.CheckOut;
-                        if (overlap) return false;
+                        if (overlap)
+                        {
+                            if (!booking.Cancelled)
+                            {
+                                return false;
+                            }
+                        }
                     }
                 }
             }
@@ -308,6 +312,7 @@ namespace Hotel.Controllers
                 BookedRoom bookedRoom = new BookedRoom();
                 bookedRoom.Room = roomToAdd;
                 bookedRoom.Occupants = people;
+                bookedRoom.Booking = bookingCart.Booking;
                 bookingCart.SelectedRooms.Add(bookedRoom);
             }
 
@@ -359,6 +364,7 @@ namespace Hotel.Controllers
                 BookedRoom bookedRoom = new BookedRoom();
                 bookedRoom.Room = roomToAdd;
                 bookedRoom.Occupants = people;
+                bookedRoom.Booking = bookingCart.Booking;
                 bookedRoom.BreakfastIncluded = breakfast;
                 bookingCart.SelectedRooms.Add(bookedRoom);
             }

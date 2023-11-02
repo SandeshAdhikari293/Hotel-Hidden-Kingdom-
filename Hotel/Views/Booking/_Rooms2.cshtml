@@ -6,11 +6,12 @@
 @model BookingRooms;
 @{
 }
-
 @foreach (KeyValuePair<RoomType, List<Room>> entry in Model.RoomList)
 {
     <form asp-action="AddRoomToBooking">
   <div class="container mx-auto px-4 mb-4">
+
+
     <div class="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
       <div class="lg:col-span-3 lg:row-end-1">
         <div class="lg:flex lg:items-start">
@@ -37,10 +38,22 @@
       </div>
 
       <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-        <h1 class="sm: text-2xl font-bold text-gray-900 sm:text-3xl">@entry.Key.Name</h1>
+        <h1 class="sm:text-2xl font-bold text-gray-900 sm:text-3xl">@entry.Key.Name</h1>
+        <p class="text-sm font-medium text-gray-500"> <span class="text-red-500">Hurry!</span>
+            Only @entry.Value.Count
+                        @if (@entry.Value.Count == 1)
+                        {
+                            <span>room</span>
+
+                            }
+                        else
+                        {
+                            <span>rooms</span>
+                        }
+            remaining!</p>
 
         <div class="mt-5 flex items-center">
-          <p class="ml-2 text-sm font-medium text-gray-500">@entry.Key.Description</p>
+          <p class="text-sm font-medium text-gray-500">@entry.Key.Description</p>
         </div>
               <input type="hidden" name="roomnumber" value="@entry.Value.ElementAt(0).Id" class="peer sr-only" />
 
@@ -50,10 +63,12 @@
                     <label class="cursor-pointer">
                         <input checked="checked" type="radio" name="breakfast" value="false" class="peer sr-only" />
                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">No breakfast</p>
+                        <span class="mt-1 block text-center text-xs">+$0</span>
                     </label>
                     <label class="cursor-pointer">
                             <input type="radio" name="breakfast" value="true" class="peer sr-only" />
                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Breakfast included</p>
+                            <span class="mt-1 block text-center text-xs">+$5/night</span>
                     </label>
                 </div>
 
@@ -64,12 +79,13 @@
             {
                             if (Model.BookingCart.People - Model.BookingCart.getOccupants() >= i)
                             {
+                                
                                 @if (i == 1)
                                 {
                                     <label class="cursor-pointer">
                                         <input id="ppl" checked="checked" type="radio" name="people" value="@i" class="peer sr-only" />
                                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i Person</p>
-                                        <span class="mt-1 block text-center text-xs">-</span>
+                                        <span class="mt-1 block text-center text-xs">+$0 pp/night</span>
                                     </label>
                                 }
                                 else
@@ -77,7 +93,7 @@
                                     <label class="cursor-pointer">
                                         <input id="ppl" type="radio" name="people" value="@i" class="peer sr-only" />
                                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i People</p>
-                                        <span class="mt-1 block text-center text-xs">-</span>
+                                        <span class="mt-1 block text-center text-xs">+$@((i-1) * entry.Key.AdditionalPrice) pp/night</span>
                                     </label>
                                 }
                             }
@@ -86,7 +102,7 @@
 
         <div class="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
           <div class="flex items-end">
-            <h1 class="text-3xl font-bold">$@entry.Key.BasePrice</h1>
+            <h1 id="price" class="text-3xl font-bold">$@entry.Key.BasePrice</h1>
             <span class="text-base">/night</span>
           </div>
 
@@ -121,17 +137,19 @@
           var people = document.getElementById('ppl').value;
           addRoom('@entry.Value.ElementAt(0).Id', people);
       });
+      
 
   </script>
-</form>
 
-<div class="h-1 rounded overflow-hidden">
-    <div class="w-full h-full bg-gray-300"></div>
-</div>
-
+    <div class="h-1 rounded overflow-hidden">
+        <div class="w-full h-full bg-gray-300"></div>
+    </div>
+    </form>
 }
 
+
 <script>
+
     $('form').submit(function (e) {
         e.preventDefault();
         $.ajax({
@@ -140,4 +158,5 @@
             data: $(this).serialize()
         });
     });
+
 </script>
