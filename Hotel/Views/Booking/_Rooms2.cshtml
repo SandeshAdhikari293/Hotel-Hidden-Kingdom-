@@ -39,18 +39,25 @@
 
       <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
         <h1 class="sm:text-2xl font-bold text-gray-900 sm:text-3xl">@entry.Key.Name</h1>
-        <p class="text-sm font-medium text-gray-500"> <span class="text-red-500">Hurry!</span>
-            Only @entry.Value.Count
-                        @if (@entry.Value.Count == 1)
-                        {
-                            <span>room</span>
+                    @if (@entry.Value.Count <= 3)
+                    {
+                        <p class="text-sm font-medium text-gray-500">
+                            <span class="text-red-500">Hurry!</span>
+                            Only @entry.Value.Count
+                            @if (@entry.Value.Count == 1)
+                            {
+                                <span>room</span>
 
                             }
-                        else
-                        {
-                            <span>rooms</span>
-                        }
-            remaining!</p>
+                            else
+                            {
+                                <span>rooms</span>
+                            }
+                            remaining!
+
+                        </p>
+                    }
+
 
         <div class="mt-5 flex items-center">
           <p class="text-sm font-medium text-gray-500">@entry.Key.Description</p>

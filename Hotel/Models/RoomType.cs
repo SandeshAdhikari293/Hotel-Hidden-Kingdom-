@@ -9,7 +9,6 @@ namespace Hotel.Models
         public string Description { get; set; }
         public double BasePrice { get; set; }
         public double AdditionalPrice { get; set; }
-
         public List<Bed>? Beds { get; set; }
         public List<Amenity>? Amenities { get; set; }
 

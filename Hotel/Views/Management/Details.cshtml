@@ -62,25 +62,25 @@
                 </li>
                 <li class="mr-2" role="presentation">
                     <button onclick="displayTable('current', @((int)BookingFilter.CUR))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="current-tab" data-tabs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">Current
-                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(occupied.Count + todaysCheckins.Count + todaysCheckouts.Count)</span>
+                        <span class="inline-flex items-center justify-center rounded-full bg-[#d9b55f] px-2 py-1 text-xs font-bold leading-none text-gray-100">@(occupied.Count + todaysCheckins.Count + todaysCheckouts.Count)</span>
 
                     </button>
                 </li>
                 <li class="mr-2" role="presentation">
                     <button onclick ="displayTable('checkin', @((int)BookingFilter.CIN))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#checkin" type="button" role="tab" aria-controls="checkin" aria-selected="false">Check-ins
-                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(todaysCheckins.Count)</span>
+                        <span class="inline-flex items-center justify-center rounded-full bg-[#d9b55f] px-2 py-1 text-xs font-bold leading-none text-gray-100">@(todaysCheckins.Count)</span>
 
                     </button>
                 </li>
                 <li role="presentation">
                     <button onclick="displayTable('checkout', @((int)BookingFilter.OUT))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#checkout" type="button" role="tab" aria-controls="checkout" aria-selected="false">Check-outs
-                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(todaysCheckouts.Count)</span>
+                        <span class="inline-flex items-center justify-center rounded-full bg-[#d9b55f] px-2 py-1 text-xs font-bold leading-none text-gray-100">@(todaysCheckouts.Count)</span>
 
                     </button>
                 </li>
                 <li role="presentation">
                     <button onclick="displayTable('staying', @((int)BookingFilter.STA))" class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="staying-tab" data-tabs-target="#staying" type="button" role="tab" aria-controls="staying" aria-selected="false">Staying
-                        <span class="inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">@(occupied.Count)</span>
+                        <span class="inline-flex items-center justify-center rounded-full bg-[#d9b55f] px-2 py-1 text-xs font-bold leading-none text-gray-100">@(occupied.Count)</span>
 
                     </button>
                 </li>
