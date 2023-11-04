@@ -301,13 +301,17 @@ namespace Hotel.Controllers
                 
                 //Find(Guid.Parse(roomID));
 
-            if(bookingCart.SelectedRooms.Count >= bookingCart.RoomCount)
+            if(bookingCart.SelectedRooms.Count >= bookingCart.RoomCount || (bookingCart.getOccupants() + people) > bookingCart.People)
             {
                 Response.StatusCode = 550;
                 return Content("Errror");
             }
 
-            if(!contains(bookingCart.SelectedRooms, roomToAdd))
+            Debug.WriteLine("People to add: " + people);
+            Debug.WriteLine("Occupants: " + bookingCart.getOccupants());
+            Debug.WriteLine("Max people: " + bookingCart.People);
+
+            if (!contains(bookingCart.SelectedRooms, roomToAdd))
             {
                 BookedRoom bookedRoom = new BookedRoom();
                 bookedRoom.Room = roomToAdd;

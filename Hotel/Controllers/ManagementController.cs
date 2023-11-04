@@ -17,7 +17,10 @@ namespace Hotel.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            return View(_context.Bookings.Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).ToList());
+
+            Statistics statistics = new Statistics(GetActiveBookings());
+            statistics.Rooms = _context.Rooms.ToList();
+            return View(statistics);
         }
 
         [Authorize(Roles = "Admin")]
@@ -42,6 +45,17 @@ namespace Hotel.Controllers
         {
             return _context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
                 .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(i => i.Id == id).FirstOrDefault();
+        }
+        public List<Booking> GetBookings()
+        {
+            return _context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).ToList();
+        }
+
+        public List<Booking> GetActiveBookings()
+        {
+            return _context.Bookings.Include(p => p.Personal).ThenInclude(a => a.Address)
+                .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType).Where(b => b.Cancelled == false).ToList();
         }
 
         public IActionResult CancelBooking(Guid id)
@@ -211,6 +225,16 @@ namespace Hotel.Controllers
                 .Include(r => r.Rooms).ThenInclude(rt => rt.Room.RoomType)
                 .Where(cin => cin.CheckOut == today).ToList();
             return bookings;
+        }
+
+        public IActionResult EarningsPartial(int filter)
+        {
+            FilterOption filterOption = (FilterOption) filter;
+            Statistics statistics = new Statistics(GetActiveBookings());
+            statistics.Rooms = _context.Rooms.ToList();
+            statistics.Filter = filterOption;
+
+            return PartialView("_Earnings", statistics);
         }
 
         public IActionResult SidepanelPartial()

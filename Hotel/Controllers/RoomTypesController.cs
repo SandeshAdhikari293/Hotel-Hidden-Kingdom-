@@ -63,7 +63,7 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([Bind("Id,Name,Description,BasePrice")] RoomType room, String[] bedList, String[] amenList)
+        public async Task<IActionResult> Add([Bind("Id,Name,Description,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList)
         {
             foreach (String bedID in bedList)
             {
@@ -119,7 +119,7 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,BasePrice")] RoomType room, String[] bedList, String[] amenList)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList)
         {
             if (id != room.Id)
             {
@@ -136,6 +136,7 @@ namespace HotelHiddenKingdom.Controllers
             roomToBeUpdated.Name = room.Name;
             roomToBeUpdated.Description = room.Description;
             roomToBeUpdated.BasePrice = room.BasePrice;
+            roomToBeUpdated.AdditionalPrice = room.AdditionalPrice;
 
             foreach (String bedID in bedList)
             {

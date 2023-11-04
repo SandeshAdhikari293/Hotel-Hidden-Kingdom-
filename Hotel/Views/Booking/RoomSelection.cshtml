@@ -106,10 +106,6 @@
 
                 if (count => @Model.BookingCart.RoomCount) {
                     drawer.show();
-                    document.getElementById('confirmRooms').disabled = false;
-                    document.getElementById("confirmRooms").classList.remove("cursor-not-allowed");
-                    document.getElementById('tooltipContent').innerHTML = "You have your rooms";
-
                 }
             },
             error: function (x, e) {
@@ -156,6 +152,7 @@
 
     function addID(id) {
         if (ids.length < @Model.BookingCart.RoomCount) {
+
 
             ids[ids.length] = id;
             updateUserFeedback();

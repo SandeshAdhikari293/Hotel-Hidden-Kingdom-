@@ -8,7 +8,8 @@
 }
 @foreach (KeyValuePair<RoomType, List<Room>> entry in Model.RoomList)
 {
-    <form asp-action="AddRoomToBooking">
+
+    <form asp-action="AddRoomToBooking" onsubmit="addRoom('@entry.Value.ElementAt(0).Id', getPeople('@entry.Key.Id'))">
   <div class="container mx-auto px-4 mb-4">
 
 
@@ -53,7 +54,7 @@
                             {
                                 <span>rooms</span>
                             }
-                            remaining!
+                            remaining
 
                         </p>
                     }
@@ -86,11 +87,13 @@
             {
                             if (Model.BookingCart.People - Model.BookingCart.getOccupants() >= i)
                             {
+
+                               string id = "ppl" + entry.Key.Id.ToString();
                                 
                                 @if (i == 1)
                                 {
                                     <label class="cursor-pointer">
-                                        <input id="ppl" checked="checked" type="radio" name="people" value="@i" class="peer sr-only" />
+                                        <input id="@id" checked="checked" type="radio" name="people" value="@i" class="peer sr-only" />
                                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i Person</p>
                                         <span class="mt-1 block text-center text-xs">+$0 pp/night</span>
                                     </label>
@@ -98,7 +101,7 @@
                                 else
                                 {
                                     <label class="cursor-pointer">
-                                        <input id="ppl" type="radio" name="people" value="@i" class="peer sr-only" />
+                                        <input id="@id" type="radio" name="people" value="@i" class="peer sr-only" />
                                         <p class="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">@i People</p>
                                         <span class="mt-1 block text-center text-xs">+$@((i-1) * entry.Key.AdditionalPrice) pp/night</span>
                                     </label>
@@ -139,14 +142,7 @@
       </div>
     </div>
   </div>
-  <script>
-      $('form').submit(function (e) {
-          var people = document.getElementById('ppl').value;
-          addRoom('@entry.Value.ElementAt(0).Id', people);
-      });
-      
 
-  </script>
 
     <div class="h-1 rounded overflow-hidden">
         <div class="w-full h-full bg-gray-300"></div>
@@ -155,7 +151,14 @@
 }
 
 
+
 <script>
+    
+    function getPeople(name) {
+        var id = "ppl" + name;
+        var output = document.querySelector('input[id="' + id + '"]:checked').value;
+        return output;
+    }
 
     $('form').submit(function (e) {
         e.preventDefault();
