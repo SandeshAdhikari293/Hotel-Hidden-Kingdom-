@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
+using Image = Hotel.Models.Image;
 
 namespace Hotel.Data
 {
@@ -20,6 +21,7 @@ namespace Hotel.Data
         public DbSet<Address> Addresses { get; set; } = default!;
         public DbSet<Room> Rooms { get; set; }
         public DbSet<BookedRoom> BookedRooms { get; set; }
+        public DbSet<Image> Images { get; set; }
 
     }
 

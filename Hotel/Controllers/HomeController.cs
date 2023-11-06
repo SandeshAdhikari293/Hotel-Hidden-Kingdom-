@@ -20,7 +20,7 @@ namespace Hotel.Controllers
         public IActionResult Index()
         {
             IndexModel indexModel = new IndexModel();
-            indexModel.Rooms = _context.RoomTypes.Include(beds => beds.Beds).ToList();
+            indexModel.Rooms = _context.RoomTypes.Include(beds => beds.Beds).Include(img => img.Images).ToList();
 
             return View(indexModel);
         }

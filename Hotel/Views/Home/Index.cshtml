@@ -288,7 +288,14 @@
         {
             <div class="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
                 <a asp-controller="RoomInfo" asp-action="Index" asp-route-id="@room.Id">
-                    <img src="~/img/room2.jpg" alt="Room Image" class="h-80 w-72 object-cover rounded-t-xl" />
+                    @if (@room.Images.Count > 0){
+                        <img src="~/../@room.Images.ElementAt(0).Folder/@room.Images.ElementAt(0).Path" alt="Room Image" class="h-80 w-72 object-cover rounded-t-xl" />
+
+                    }
+                    else
+                    {
+                        <img src="~/img/room2.jpg" alt="Room Image" class="h-80 w-72 object-cover rounded-t-xl" />
+                    }
                     <div class="px-4 py-3 w-100">
                         <span class="text-gray-400 mr-3 uppercase text-xs">Sleeps @room.maxPeople()</span>
                         <p class="text-lg font-bold text-black truncate block capitalize">@room.Name</p>

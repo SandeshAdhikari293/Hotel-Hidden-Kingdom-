@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Models;
+using Microsoft.Extensions.Hosting;
+using System.Drawing;
+using Image = Hotel.Models.Image;
 
 namespace HotelHiddenKingdom.Controllers
 {
     public class RoomTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public RoomTypesController(ApplicationDbContext context)
+        public RoomTypesController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this._hostEnvironment = hostEnvironment;
+
         }
 
         // GET: Rooms
@@ -63,8 +69,10 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([Bind("Id,Name,Description,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList)
+        public async Task<IActionResult> Add([Bind("Id,Name,Description,LongDescription,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList, List<IFormFile> images)
         {
+           
+
             foreach (String bedID in bedList)
             {
                 Guid bedGUID = Guid.Parse(bedID);
@@ -84,6 +92,26 @@ namespace HotelHiddenKingdom.Controllers
 
             if (ModelState.IsValid)
             {
+
+                string uploads = Path.Combine(_hostEnvironment.ContentRootPath, "wwwroot/RoomImages/" + room.Name);
+                //Create directory if it doesn't exist 
+                Directory.CreateDirectory(uploads);
+                foreach (IFormFile image in images)
+                {
+                    string filePath = Path.Combine(uploads, image.FileName);
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                    {
+                        image.CopyTo(fileStream);
+                    }
+
+                    Image img = new Image();
+                    img.Id = new Guid();
+                    img.Folder = "RoomImages/" + room.Name;
+                    img.Path = image.FileName;
+
+                    room.Images.Add(img);
+                }
+
                 room.Id = Guid.NewGuid();
                 _context.Add(room);
                 await _context.SaveChangesAsync();
@@ -119,7 +147,7 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,LongDescription,BasePrice,AdditionalPrice")] RoomType room, String[] bedList, String[] amenList, List<IFormFile> images)
         {
             if (id != room.Id)
             {
@@ -129,10 +157,13 @@ namespace HotelHiddenKingdom.Controllers
             RoomType roomToBeUpdated = _context.RoomTypes
                 .Include(a => a.Amenities)
                 .Include(b => b.Beds)
+                .Include(img => img.Images)
                 .Where(i => i.Id == room.Id).First();
 
             roomToBeUpdated.Amenities.Clear();
             roomToBeUpdated.Beds.Clear();
+            roomToBeUpdated.Images.Clear();
+
             roomToBeUpdated.Name = room.Name;
             roomToBeUpdated.Description = room.Description;
             roomToBeUpdated.BasePrice = room.BasePrice;
@@ -156,6 +187,25 @@ namespace HotelHiddenKingdom.Controllers
 
             if (ModelState.IsValid)
             {
+                string uploads = Path.Combine(_hostEnvironment.ContentRootPath, "wwwroot/RoomImages/" + room.Name);
+                //Create directory if it doesn't exist 
+                Directory.CreateDirectory(uploads);
+                foreach (IFormFile image in images)
+                {
+                    string filePath = Path.Combine(uploads, image.FileName);
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                    {
+                        image.CopyTo(fileStream);
+                    }
+
+                    Image img = new Image();
+                    img.Id = new Guid();
+                    img.Folder = "RoomImages/" + room.Name;
+                    img.Path = image.FileName;
+
+                    roomToBeUpdated.Images.Add(img);
+                }
+
                 try
                 {
                     _context.Update(roomToBeUpdated);

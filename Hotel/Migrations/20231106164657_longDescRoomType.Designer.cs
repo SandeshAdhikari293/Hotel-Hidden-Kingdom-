@@ -4,6 +4,7 @@ using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106164657_longDescRoomType")]
+    partial class longDescRoomType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,30 +194,6 @@ namespace Hotel.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Hotel.Models.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Folder")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("RoomTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomTypeId");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Hotel.Models.Personal", b =>
@@ -559,13 +537,6 @@ namespace Hotel.Migrations
                     b.Navigation("Personal");
                 });
 
-            modelBuilder.Entity("Hotel.Models.Image", b =>
-                {
-                    b.HasOne("Hotel.Models.RoomType", null)
-                        .WithMany("Images")
-                        .HasForeignKey("RoomTypeId");
-                });
-
             modelBuilder.Entity("Hotel.Models.Personal", b =>
                 {
                     b.HasOne("Hotel.Models.Address", "Address")
@@ -645,11 +616,6 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Hotel.Models.RoomType", b =>
-                {
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }
