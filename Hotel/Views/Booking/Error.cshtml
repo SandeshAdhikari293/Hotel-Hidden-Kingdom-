@@ -1,0 +1,23 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="bg-gray-100 h-screen">
+    <div class="bg-white p-6  md:mx-auto">
+        <div class="flex justify-center mt-4 mb-4">
+            <img width="80" height="80" src="~/img/Flat_cross_icon.svg"/>
+        </div>
+
+        <div class="text-center">
+            <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Error</h3>
+            <p class="text-gray-600 my-2">The room you have selected is no longer available</p>
+            <p> We are sorry for this inconvenience </p>
+            <div class="py-10 text-center">
+                <a asp-action="Index" asp-controller="Home" class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
+                    GO BACK
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

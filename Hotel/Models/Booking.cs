@@ -14,6 +14,7 @@
         public string? PaymentTransactionId { get; set; }
         public bool Cancelled {  get; set; }
         public string? AdditionalInformation { get; set; }
+        //public string OrderID { get; set; }
 
         public Booking()
         {

@@ -2,4 +2,102 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+
 }
+@model Statistics
+
+
+    <!-- Pie Chart -->
+    <div class="py-6" id="pie-chart"></div>
+
+<script>
+    //document.getElementById('chartTitle').innerHTML = "";
+    function formatLegend(legend) {
+        legend = legend.substring(1);
+        return legend.split(',');
+    }
+
+    function formatData(str) {
+        str = str.substring(1);
+        data = str.split(',');
+
+        output = [];
+        for (var i = 0; i < data.length; i++) {
+            output[i] = parseFloat(data[i]);
+        }
+
+        return output;
+    }
+
+    var data = [];
+    var legend = [];
+
+    data = formatData('@(Model.getDataCountryDemo((int)Model.Filter))');
+    legend = formatLegend('@(Model.getLabelsCountryDemo((int)Model.Filter))');
+
+
+    // ApexCharts options and config
+        var getChartOptions = () => {
+            return {
+                series: data,
+                colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+                chart: {
+                    height: 420,
+                    width: "100%",
+                    type: "pie",
+                },
+                stroke: {
+                    colors: ["white"],
+                    lineCap: "",
+                },
+                plotOptions: {
+                    pie: {
+                        labels: {
+                            show: true,
+                        },
+                        size: "100%",
+                        dataLabels: {
+                            offset: -25
+                        }
+                    },
+                },
+                labels: legend,
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontFamily: "Inter, sans-serif",
+                    },
+                },
+                legend: {
+                    position: "bottom",
+                    fontFamily: "Inter, sans-serif",
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value + ""
+                        },
+                    },
+                },
+                xaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value + ""
+                        },
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                },
+            }
+        }
+
+        if (document.getElementById("pie-chart") && typeof ApexCharts !== 'undefined') {
+            const chart = new ApexCharts(document.getElementById("pie-chart"), getChartOptions());
+            chart.render();
+        }
+</script>
+

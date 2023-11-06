@@ -237,6 +237,26 @@ namespace Hotel.Controllers
             return PartialView("_Earnings", statistics);
         }
 
+        public IActionResult OccupancyPartial(int filter)
+        {
+            FilterOption filterOption = (FilterOption)filter;
+            Statistics statistics = new Statistics(GetActiveBookings());
+            statistics.Rooms = _context.Rooms.ToList();
+            statistics.Filter = filterOption;
+
+            return PartialView("_Occupancy", statistics);
+        }
+
+        public IActionResult DemographicsPartial(int filter)
+        {
+            FilterOption filterOption = (FilterOption)filter;
+            Statistics statistics = new Statistics(GetActiveBookings());
+            statistics.Rooms = _context.Rooms.ToList();
+            statistics.Filter = filterOption;
+
+            return PartialView("_Demographics", statistics);
+        }
+
         public IActionResult SidepanelPartial()
         {
             return PartialView("_Sidepanel");

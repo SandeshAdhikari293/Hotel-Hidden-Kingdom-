@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Hosting;
 using Hotel.Data;
 using Hotel.Models;
+using System.Drawing;
 
 namespace HotelHiddenKingdom.Controllers
 {
@@ -62,12 +55,22 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([Bind("Id,Name,IconPath")] Amenity amenity)
+        public async Task<IActionResult> Add([Bind("Id,Name,Description")] Amenity amenity, IFormFile icon)
         {
-
 
             if (ModelState.IsValid)
             {
+
+                string uploads = Path.Combine(_hostEnvironment.ContentRootPath, "wwwroot/AmenityIcons");
+                //Create directory if it doesn't exist 
+                Directory.CreateDirectory(uploads);
+                string filePath = Path.Combine(uploads, icon.FileName);
+                using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    icon.CopyTo(fileStream);
+                }
+
+                amenity.IconPath = icon.FileName; 
 
                 amenity.Id = Guid.NewGuid();
                 _context.Add(amenity);
@@ -98,7 +101,7 @@ namespace HotelHiddenKingdom.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,IconPath")] Amenity amenity)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] Amenity amenity, IFormFile icon)
         {
             if (id != amenity.Id)
             {
@@ -109,6 +112,18 @@ namespace HotelHiddenKingdom.Controllers
             {
                 try
                 {
+                    string uploads = Path.Combine(_hostEnvironment.ContentRootPath, "AmenityIcons");
+                    //Create directory if it doesn't exist 
+                    Directory.CreateDirectory(uploads);
+                    string filePath = Path.Combine(uploads, icon.FileName);
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                    {
+                        icon.CopyTo(fileStream);
+                    }
+
+                    amenity.IconPath = icon.FileName;
+
+
                     _context.Update(amenity);
                     await _context.SaveChangesAsync();
                 }

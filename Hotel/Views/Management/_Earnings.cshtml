@@ -47,11 +47,6 @@
     data = formatData('@(Model.getEarnings((int)Model.Filter))');
     legend = formatLegend('@(Model.getLegend((int)Model.Filter))');
 
-    console.log(@((int)Model.Filter));
-    console.log(@((int)FilterOption.WEEK));
-    console.log(data);
-    console.log(legend);
-
         var options = {
             chart: {
                 height: "100%",
