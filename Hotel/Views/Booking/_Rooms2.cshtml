@@ -18,21 +18,26 @@
         <div class="lg:flex lg:items-start">
           <div class="lg:order-2 lg:ml-5">
             <div class="max-w-xl overflow-hidden rounded-lg">
-              <img class="h-full w-full max-w-full object-cover" src="~/img/room2.jpg" alt="" />
+                                @if (entry.Key.Images.Count > 0)
+                                {
+                                    <img class="h-full w-full max-w-full object-cover" src="~/../@entry.Key.Images.ElementAt(0).Folder/@entry.Key.Images.ElementAt(0).Path" alt="" />
+                                }
+                                else
+                                {
+                                    <img class="h-full w-full max-w-full object-cover" src="~/img/room2.jpg" alt="" />
+                                }
+                                <!--<img class="h-full w-full max-w-full object-cover" src="~/img/room2.jpg" alt="" />-->
             </div>
           </div>
 
           <div class="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
             <div class="flex flex-row items-start lg:flex-col">
-              <button type="button" class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-900 text-center">
-                <img class="h-full w-full object-cover" src="~/img/room2.jpg" alt="" />
-              </button>
-              <button type="button" class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-transparent text-center">
-                <img class="h-full w-full object-cover" src="~/img/room.jpg" alt="" />
-              </button>
-              <button type="button" class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-transparent text-center">
-                <img class="h-full w-full object-cover" src="~/img/room1.jpg" alt="" />
-              </button>
+                                @foreach (Image img in entry.Key.Images)
+                                {
+                                    <button type="button" class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-900 text-center">
+                                        <img class="h-full w-full object-cover" src="~/../@img.Folder/@img.Path" alt="" />
+                                    </button>
+                                }
             </div>
           </div>
         </div>

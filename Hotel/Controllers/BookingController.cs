@@ -62,7 +62,7 @@ namespace Hotel.Controllers
 
             Dictionary<RoomType, List<Room>> RoomList = new Dictionary<RoomType, List<Room>>();
 
-            foreach(Room room in _context.Rooms.Include(r => r.RoomType).ToList())
+            foreach(Room room in _context.Rooms.Include(r => r.RoomType).ThenInclude(img => img.Images).ToList())
             {
                 if (!isAvailable(room, checkinDate, checkoutDate)) continue;
                 if (!RoomList.ContainsKey(room.RoomType))
@@ -239,7 +239,7 @@ namespace Hotel.Controllers
         {
             Dictionary<RoomType, List<Room>> RoomList = new Dictionary<RoomType, List<Room>>();
 
-            foreach (Room room in _context.Rooms.Include(r => r.RoomType).ThenInclude(b => b.Beds).ToList())
+            foreach (Room room in _context.Rooms.Include(r => r.RoomType).ThenInclude(b => b.Beds).Include(rt => rt.RoomType).ThenInclude(img => img.Images).ToList())
             {
                 if (!isAvailable(room, bookingCart.CheckIn, bookingCart.CheckOut)) continue;
                 if (!RoomList.ContainsKey(room.RoomType))
@@ -314,7 +314,7 @@ namespace Hotel.Controllers
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
             if(bookingCart == null) return RedirectToAction("Index");
 
-            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
+            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Include(rt => rt.RoomType).ThenInclude(img => img.Images).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
                 
                 //Find(Guid.Parse(roomID));
 
@@ -349,7 +349,7 @@ namespace Hotel.Controllers
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
             if (bookingCart == null) return RedirectToAction("Index");
 
-            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
+            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Include(rt => rt.RoomType).ThenInclude(img => img.Images).Where(id => id.Id == Guid.Parse(roomID)).FirstOrDefault();
 
             //Find(Guid.Parse(roomID));
 
@@ -370,7 +370,7 @@ namespace Hotel.Controllers
             BookingCart bookingCart = HttpContext.Session.GetObjectFromJson<BookingCart>("bookingcart");
             if (bookingCart == null) return RedirectToAction("Index");
 
-            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Where(id => id.Id == Guid.Parse(roomnumber)).FirstOrDefault();
+            Room roomToAdd = _context.Rooms.Include(t => t.RoomType).ThenInclude(b => b.Beds).Include(rt => rt.RoomType).ThenInclude(img => img.Images).Where(id => id.Id == Guid.Parse(roomnumber)).FirstOrDefault();
 
             if (bookingCart.SelectedRooms.Count >= bookingCart.RoomCount)
             {
@@ -406,7 +406,7 @@ namespace Hotel.Controllers
 
             Dictionary<RoomType, List<Room>> RoomList = new Dictionary<RoomType, List<Room>>();
 
-            foreach (Room room in _context.Rooms.Include(r => r.RoomType).ThenInclude(b => b.Beds).ToList())
+            foreach (Room room in _context.Rooms.Include(r => r.RoomType).ThenInclude(b => b.Beds).Include(rt => rt.RoomType).ThenInclude(img => img.Images).ToList())
             {
                 if (!isAvailable(room, bookingCart.CheckIn, bookingCart.CheckOut)) continue;
                 if (!RoomList.ContainsKey(room.RoomType))

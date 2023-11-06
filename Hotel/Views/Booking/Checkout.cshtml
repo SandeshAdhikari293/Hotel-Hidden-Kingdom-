@@ -58,7 +58,14 @@
                 @foreach(BookedRoom room in Model.SelectedRooms)
                 {
                     <div class="flex flex-col rounded-lg bg-white sm:flex-row">
-                        <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/img/room2.jpg" alt="" />
+                        @if (room.Room.RoomType.Images.Count > 0)
+                        {
+                            <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/../@room.Room.RoomType.Images.ElementAt(0).Folder/@room.Room.RoomType.Images.ElementAt(0).Path" alt="" />
+                        }
+                        else
+                        {
+                            <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="~/img/room2.jpg" alt="" />
+                        }
                         <div class="flex w-full flex-col px-4 py-4">
                             <span class="font-semibold">@room.Room.Number @room.Room.RoomType.Name (@room.Occupants)</span>
                             <span class="float-right text-gray-400">$@room.getRoomsSubtotalPerNight()/night x @room.Booking.getLengthOfStay() + (@room.Occupants x) breakfast at $@room.getBreakfastSubtotal()</span>
